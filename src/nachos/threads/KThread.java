@@ -285,6 +285,7 @@ public class KThread {
     public void join() {
 		Lib.debug(dbgThread, "Joining to thread: " + toString());
 
+		boolean intStatus = Machine.interrupt().disable(); // interrupts have to be disabled before waitForAccess is called
 		Lib.assertTrue(this != currentThread); // Checks that we are not calling join on ourselves
 		// grader 3: calling join on an already finished thread
 		if (this.status == statusFinished){
@@ -293,7 +294,6 @@ public class KThread {
 		/* need to get reference to the current thread, saved local to thread B
 		 add the current thread to the threadqueue
 		 need to put current thread to sleep  */
-		boolean intStatus = Machine.interrupt().disable(); // interrupts have to be disabled before waitForAccess is called
 		threadQueue.waitForAccess(currentThread); // putting the current thread on the queue
 		sleep(); // this will sleep the current thread and run the next thread
 		Machine.interrupt().restore(intStatus);
